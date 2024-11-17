@@ -1,19 +1,6 @@
 import PySimpleGUI as sg#importing pysimplegui as sg
 
 
-def create_lobby():#declare the function for creating the lobby
-    screen = [
-        [sg.Text('Welcome to the Chart Application!')],#welcome Message for lobby
-        [sg.Button('Login'), sg.Button('Register'), sg.Button('Exit'), sg.Button('ByPass Lobby')]#exit and logout button(navigation technically)
-    ]
-    return screen#return the screen
-
-def create_default_screen():#declaring the function for creating the default screen
-    screen = [
-        [sg.Text('Please login to access the application.')],#login message
-        [sg.Button('Screen 1'), sg.Button('Screen 2'), sg.Button('Screen 3'), sg.Button('Exit')]#chart buttons
-    ]
-    return screen
 
 
 def create_screen1():#declaring the function for creating screen 1
@@ -99,7 +86,7 @@ def create_screen3():#declaring the function for creating screen 3
     ]
     return screen#return the screen
 
-def create_login():
+def create_login():#testing the login screen, not active right now as it was taken from todd's code
     """ Login screen """
     layout = [
         [sg.Text('Login')],
@@ -109,7 +96,7 @@ def create_login():
     ]
     return layout
 
-def create_register():
+def create_register():#testing the register screen, not active right now as it was taken from todd's code
     """ Registration screen """
     layout = [
         [sg.Text('Register')],

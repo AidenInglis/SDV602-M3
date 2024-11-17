@@ -47,7 +47,7 @@ def zoom_out():
     ax.set_ylim(y_min - 0.5, y_max + 0.5)
     fig.canvas.draw()
 
-def add_toolbar(canvas, fig_canvas_agg):
+def add_toolbar(canvas, fig_canvas_agg):#toolbar functionality.
     """ Add Matplotlib Navigation Toolbar to the canvas """
     toolbar = NavigationToolbar2Tk(fig_canvas_agg, canvas.TKCanvas)
     toolbar.update()

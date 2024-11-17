@@ -1,3 +1,4 @@
+#code for authentication functionality's are all defined here in auth.py, it also acts as a main file for the authentication functionalitys.
 import PySimpleGUI as sg
 import json
 import os
@@ -17,15 +18,6 @@ def save_data(data):
     with open("users.json", "w") as f:
         json.dump(data, f)
 
-
-def register_user(username, password):
-    """ Register a new user """
-    data = load_data()
-    if username in data:
-        return False  #user already exists
-    data[username] = password
-    save_data(data)
-    return True
 
 def register(username, password):
     data = load_data()
@@ -49,7 +41,8 @@ def create_login():
     layout = [
         [sg.Text("Username:"), sg.InputText(key="username")],
         [sg.Text("Password:"), sg.InputText(key="password", password_char="*")],
-        [sg.Button("Login"), sg.Button("Register")]
+        [sg.Button("Login"), sg.Button("Register")],
+        [sg.Text("", key="error", size=(20, 1), text_color="red")]
     ]
 
     window = sg.Window("Authentication", layout, finalize = True)
@@ -60,12 +53,12 @@ def create_login():
 
         if event in (sg.WIN_CLOSED, "Exit"):
             break
-        username = values[username]
-        password = values[password]
+        username = values["username"]
+        password = values["password"]
 
         if event == "Login":
             if not username or not password:
-                window["error"].update("Please enter both username and password")
+                window[""].update("Please enter both username and password")
                 continue
             login_status = user_manager.login(username, password)
             if login_status == "Login Success":

@@ -30,12 +30,12 @@ class JsnDrop:
 
         r = requests.get(self.url, payload)
 
-        # Update the status and result
+        #update the status and result
         jsnResponse = r.json()
         self.jsnStatus = jsnResponse["JsnMsg"]
         self.jsnResult = jsnResponse["Msg"]
 
-        # Feedback to check it works
+        #debug
         print(f"Status = {self.jsnStatus} , Result = {self.jsnResult}")
         return self.jsnResult 
 

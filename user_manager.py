@@ -1,3 +1,5 @@
+#most of this file is copied from the example given by todd.
+
 from json_drop_service import JsnDrop
 import json
 import os
@@ -7,19 +9,19 @@ from datetime import datetime
 #check users file exists, if not then create
 USER_FILE = "users.json"
 
-def load_users():
+def load_users():#function for loading users
     """ Load existing users from the JSON file """
     if not os.path.exists(USER_FILE):
         return {}
     with open(USER_FILE, "r") as f:
         return json.load(f)
 
-def save_users(users):
+def save_users(users):# fucntion for saving users
     """ Save users to the JSON file """
     with open(USER_FILE, "w") as f:
         json.dump(users, f)
 
-def register_user(username, password):
+def register_user(username, password):#function fo registering a user
     """ Register a new user """
     users = load_users()
     if username in users:
@@ -28,7 +30,7 @@ def register_user(username, password):
     save_users(users)
     return True
 
-def authenticate_user(username, password):
+def authenticate_user(username, password):#function for authenticating a user
     """ Authenticate the user for login """
     users = load_users()
     if users.get(username) == password:
@@ -37,7 +39,7 @@ def authenticate_user(username, password):
 
 
 
-class UserManager(object):
+class UserManager(object):#class for managing users
     current_user = None
     current_pass = None
     current_status = None
@@ -47,7 +49,7 @@ class UserManager(object):
     stop_thread = False
     this_user_manager = None
     thread_lock = False
-    jsn_tok = "4c78b4b2-5a72-459d-86ec-dd1bb298aa17"
+    jsn_tok = "4c78b4b2-5a72-459d-86ec-dd1bb298aa17"#my token is here
     latest_time = None
 
     def now_time_stamp(self):
@@ -76,7 +78,7 @@ class UserManager(object):
         # self.test_api()
 
     def register(self, user_id, password):
-        api_result = self.jsnDrop.select("tblUser",f"PersonID = '{user_id}'") # Danger SQL injection attack via user_id?? Is JsnDrop SQL injection attack safe??
+        api_result = self.jsnDrop.select("tblUser",f"PersonID = '{user_id}'")
         if( "DATA_ERROR" in self.jsnDrop.jsnStatus): # we get a DATA ERROR on an empty list - this is a design error in jsnDrop
             # Is this where our password should be SHA'ed !?
             result = self.jsnDrop.store("tblUser",[{'PersonID':user_id,'Password':password,'Status':'Registered'}])
@@ -90,8 +92,8 @@ class UserManager(object):
 
     def login(self, user_id, password):
         result = None
-        api_result = self.jsnDrop.select("tblUser",f"PersonID = '{user_id}' AND Password = '{password}'") # Danger SQL injection attack via user_id?? Is JsnDrop SQL injection attack safe??
-        if( "DATA_ERROR" in self.jsnDrop.jsnStatus): # then the (user_id,password) pair do not exist - so bad login
+        api_result = self.jsnDrop.select("tblUser",f"PersonID = '{user_id}' AND Password = '{password}'")
+        if( "DATA_ERROR" in self.jsnDrop.jsnStatus): #(user_id,password) pair do not exist
             result = "Login Fail"
             UserManager.current_status = "Logged Out"
             UserManager.current_user = None
@@ -161,8 +163,7 @@ class UserManager(object):
         return result
 
 
-    def test_api(self):
-        # Should this be in jsn_drop_service ?
+    def test_api(self):# a quick test on creating a table, storing data, selecting data, deleting data and dropping the table. this is not active in the main code line
         result = self.jsnDrop.create("tblTestUser",{"PersonID PK":"Aiden","Score":21})
         print(f"Create Result from UserManager {result}")
 
@@ -172,10 +173,10 @@ class UserManager(object):
         result = self.jsnDrop.all("tblTestUser")
         print(f"All Result from UserManager {result}")
 
-        result = self.jsnDrop.select("tblTestUser","Score > 200") # select from tblUser where Score > 200
+        result = self.jsnDrop.select("tblTestUser","Score > 200") #select from tblUser where Score > 200
         print(f"Select Result from UserManager {result}")
 
-        result = self.jsnDrop.delete("tblTestUser","Score > 200") # delete from tblUser where Score > 200
+        result = self.jsnDrop.delete("tblTestUser","Score > 200") #delete from tblUser where Score > 200
         print(f"Delete Result from UserManager {result}")
 
         result = self.jsnDrop.drop("tblTestUser")
@@ -183,16 +184,13 @@ class UserManager(object):
 
 
 
-def testUserManager():
-    # Just a Test
-
-    # Start with no user table and no chat table
+def testUserManager():#testing the usermanager code
     a_jsnDrop = JsnDrop(UserManager.jsn_tok,"https://newsimland.com/~todd/JSON")
     a_jsnDrop.drop('tblUser')
     a_jsnDrop.drop('tblChat')
-    # Now start a User manager with a clean slate
+    #start User_manager and clear the tables
 
-    # Get a User Maanager
+    #get User_Maanager
     a_user_manager = UserManager()
 
     #register
@@ -203,11 +201,11 @@ def testUserManager():
     login_status = a_user_manager.login("Aiden","53412")
     print(f"LOGIN STATUS: {login_status}")
 
-    # when logged in set current screen
+    #when logged in set current screen
     set_screen_status = a_user_manager.set_current_DES("DES1")  
     print(f"SET CURRENT SCREEN: {set_screen_status}") 
 
-    # when logged in send a chat   
+    #when logged in send a chat   
     chat_status = a_user_manager.chat("Hello 1")
     print(f"SEND CHAT STATUS: {chat_status}")
 
@@ -215,18 +213,18 @@ def testUserManager():
     chat_status = a_user_manager.get_chat()
     print(f"GET CHAT STATUS: {chat_status}")
 
-    # log out
+    #log out
     logout_status = a_user_manager.logout()
     print(f"LOGOUT STATUS: {logout_status}")
 
-    # attempt bad login (logs out)
+    #attempt bad login (logs out)
     login_status = a_user_manager.login("Aiden","14")
     print(f"LOGIN STATUS: {login_status}")
 
-    # attempt send chat when not logged in, after bad login 
+    #attempt send chat when not logged in, after bad login 
     chat_status = a_user_manager.chat("Hello 2")
     print(f"SEND CHAT STATUS after bad login: {chat_status}")
 
-    # attempt get chat when not logged in, after bad login
+    #attempt get chat when not logged in, after bad login
     chat_status = a_user_manager.get_chat()
     print(f"GET CHAT STATUS after bad login: {chat_status}")
