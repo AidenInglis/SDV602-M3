@@ -2,7 +2,11 @@ from screens import create_lobby, create_login, create_register, create_screen1,
 from user_manager import register_user, authenticate_user
 from chart import draw_chart, zoom_in, zoom_out
 import PySimpleGUI as sg
-import matplotlib.pyplot as plt
+import sys
+sys.dont_write_bytecode = True
+#from auth import LoginView
+#from chat_view import ChatView
+
 
 def main():
     window = sg.Window('Data Analyst Program', create_lobby(), finalize=True)

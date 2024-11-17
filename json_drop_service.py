@@ -2,42 +2,52 @@ import requests
 import json
 
 class JsnDrop:
-    def __init__(self, token, base_url):
-        self.token = "4c78b4b2-5a72-459d-86ec-dd1bb298aa17"
-        self.base_url = "https://newsimland.com/~todd/JSON/"
+    def __init__(self, tok = None, url = None) -> None:
+        self.tok = tok
+        self.url = url
+        
+        self.jsnStatus = " "
+        self.jsnResult = {}
+
+        self.decode = json.JSONDecoder().decode
+        self.encode = json.JSONEncoder().encode
+
+
+        self.jsnDropRecord = self.decode('{"tok":"","cmd":{}}')
+        self.jsnDropCreate = self.decode('{"CREATE":"aTableName","EXAMPLE":{}}')
+        self.jsnDropStore  = self.decode('{"STORE":"aTableName","VALUE":[]}')
+        self.jsnDropAll    = self.decode('{"ALL":"aTableName"}')
+        self.jsnDropSelect = self.decode('{"SELECT":"aTableName","WHERE":"aField = b"}')
+        self.jsnDropDelete = self.decode('{"DELETE":"aTableName","WHERE":"aField = b"}')
+        self.jsnDropDrop   = self.decode('{"DROP":"aTableName"}')
+
 
     def jsnDropApi(self, command):
-        """
-        Sends the command to the JsnDrop API.
-        """
-        #construct query string for the API
-        query = {
-            "tok": self.token,
-            "cmd": command
-        }
+        api_call  = self.jsnDropRecord
+        api_call["cmd"] = command
+        api_call["tok"] = self.tok
+        payload = {'tok': self.encode(api_call)}
 
-        #convert to JSON and encode to make into a URL
-        query_string = f"{self.base_url}?tok={json.dumps(query)}"
+        r = requests.get(self.url, payload)
 
-        print(f"Generated URL: {query_string}")
+        # Update the status and result
+        jsnResponse = r.json()
+        self.jsnStatus = jsnResponse["JsnMsg"]
+        self.jsnResult = jsnResponse["Msg"]
 
-        #send a GET request
-        try:
-            response = requests.get(query_string)
-            if response.status_code == 200:
-                return response.json()  #parse JSON response
-            else:
-                print(f"Error: {response.status_code} - {response.text}")
-                return None
-        except requests.exceptions.RequestException as e:
-            print(f"Request failed: {e}")
-            return None
+        # Feedback to check it works
+        print(f"Status = {self.jsnStatus} , Result = {self.jsnResult}")
+        return self.jsnResult 
+
+
+
+ 
 
     def create(self, table_name, example):
         """
         Creates a new table with the specified example schema.
         """
-        command = {
+        command = self.jsnDropCreate ={
             "CREATE": table_name,
             "EXAMPLE": example
         }
@@ -47,7 +57,7 @@ class JsnDrop:
         """
         Stores data into the specified table.
         """
-        command = {
+        command = self.jsnDropStore = {
             "STORE": table_name,
             "VALUE": value_list
         }
@@ -57,7 +67,7 @@ class JsnDrop:
         """
         Retrieves all data from the specified table.
         """
-        command = {
+        command = self.jsnDropAll = {
             "ALL": table_name
         }
         return self.jsnDropApi(command)
@@ -66,7 +76,7 @@ class JsnDrop:
         """
         Selects data from the specified table based on a WHERE clause.
         """
-        command = {
+        command = self.jsnDropSelect = {
             "SELECT": table_name,
             "WHERE": where
         }
@@ -76,7 +86,7 @@ class JsnDrop:
         """
         Deletes data from the specified table based on a WHERE clause.
         """
-        command = {
+        command = self.jsnDropDelete = {
             "DELETE": table_name,
             "WHERE": where
         }
@@ -86,7 +96,35 @@ class JsnDrop:
         """
         Drops the specified table.
         """
-        command = {
+        command = self.jsnDropDrop = {
             "DROP": table_name
         }
         return self.jsnDropApi(command)
+    
+
+
+    class jsnTable(object):
+        def __init__(self, jsnDrop, table_name) -> None:
+            self.jsnDrop = jsnDrop
+            self.table_name = table_name
+
+        def create(self, example):
+            return self.jsnDrop.create(self.table_name, example)
+
+        def store(self, value_list):
+            return self.jsnDrop.store(self.table_name, value_list)
+
+        def all(self):
+            return self.jsnDrop.all(self.table_name)
+
+        def select(self, where):
+            return self.jsnDrop.select(self.table_name, where)
+
+        def delete(self, where):
+            return self.jsnDrop.delete(self.table_name, where)
+
+        def drop(self):
+            return self.jsnDrop.drop(self.table_name)
+
+        def __str__(self) -> str:
+            return f"Table {self.table_name}"

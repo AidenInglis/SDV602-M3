@@ -1,5 +1,6 @@
 import PySimpleGUI as sg#importing pysimplegui as sg
 
+
 def create_lobby():#declare the function for creating the lobby
     screen = [
         [sg.Text('Welcome to the Chart Application!')],#welcome Message for lobby
@@ -38,8 +39,8 @@ def create_screen1():#declaring the function for creating screen 1
     screen = [#declaring the layout of the screen
         [sg.Text('Screen 1')],#title of the screen
         [sg.Column(left_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#left col
-         sg.Column(right_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#right col
-         sg.Frame('Summary Info', summary_col, element_justification='left', pad=(10, 10))]#summary info box on the left side but third col.
+        sg.Column(right_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#right col
+        sg.Frame('Summary Info', summary_col, element_justification='left', pad=(10, 10))]#summary info box on the left side but third col.
     ]
     return screen#return the screen
 
@@ -66,8 +67,8 @@ def create_screen2():#declaring the function for creating screen 2
     screen = [#declaring the layout of the screen
         [sg.Text('Screen 2')],#title of the screen
         [sg.Column(left_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#left col
-         sg.Column(right_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#right col
-         sg.Frame('Summary Info', summary_col, element_justification='left', pad=(10, 10))]#summary info box on the left side but third col.
+        sg.Column(right_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#right col
+        sg.Frame('Summary Info', summary_col, element_justification='left', pad=(10, 10))]#summary info box on the left side but third col.
     ]
     return screen#return the screen
 
@@ -93,8 +94,8 @@ def create_screen3():#declaring the function for creating screen 3
     screen = [#declaring the layout of the screen
         [sg.Text('Screen 3')],#title of the screen
         [sg.Column(left_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#left col
-         sg.Column(right_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#right col
-         sg.Frame('Summary Info', summary_col, element_justification='left', pad=(10, 10))]#summary info box on the left side but third col.
+        sg.Column(right_col, vertical_alignment='top', element_justification='center', pad=(10, 10)),#right col
+        sg.Frame('Summary Info', summary_col, element_justification='left', pad=(10, 10))]#summary info box on the left side but third col.
     ]
     return screen#return the screen
 
